@@ -1,20 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using System.Globalization;
-using System.Threading;
 
 namespace WpfApp2
 {
@@ -47,13 +38,29 @@ namespace WpfApp2
     public partial class MainWindow : Window
     {
         [DllImport("user32.dll")]
-        static extern IntPtr GetKeyboardLayout(uint idThread);
+        private static extern IntPtr GetKeyboardLayout(uint idThread);
+
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
+
         [DllImport("user32.dll")]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr processId);
 
         private CultureInfo _currentLanaguge;
+
+        private LanguageJson lang = new LanguageJson
+        {
+            Email = "james@example.com",
+            Active = true,
+            CreatedDate = new DateTime(2013, 1, 20, 0, 0, 0, DateTimeKind.Utc),
+            Roles = new List<string>
+                                {
+                                    "User",
+                                    "Admin"
+                                }
+        };
+
+        private string json_data = JsonConvert.SerializeObject(lang, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
 
         public MainWindow()
         {
@@ -64,6 +71,7 @@ namespace WpfApp2
                 while (true)
                 {
                     HandleCurrentLanguage();
+                    ConvertToJson();
                     Thread.Sleep(500);
                 }
             });
@@ -82,7 +90,32 @@ namespace WpfApp2
             {
                 _currentLanaguge = currentCulture;
                 MessageBox.Show(_currentLanaguge.Name);
+                MessageBox.Show("");
             }
         }
+
+        private void ConvertToJson()
+        {
+            //        {
+            //  "game": "ADVENTURE",
+            //  "event": "HEALTH",
+            //  "min_value": 0,
+            //  "max_value": 100,
+            //  "icon_id": 1,
+            //  "value_optional": false
+            //}
+
+            MessageBox.Show(json_data);
+        }
+
+        // {
+        //   "Email": "james@example.com",
+        //   "Active": true,
+        //   "CreatedDate": "2013-01-20T00:00:00Z",
+        //   "Roles": [
+        //     "User",
+        //     "Admin"
+        //   ]
+        // }
     }
 }
