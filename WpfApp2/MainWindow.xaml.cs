@@ -60,12 +60,12 @@ namespace WpfApp2
                                 }
         };
 
-        private string json_data = JsonConvert.SerializeObject(lang, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
 
         public MainWindow()
         {
             InitializeComponent();
-
+            string json_data = JsonConvert.SerializeObject(lang, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
+            MessageBox.Show(json_data);
             Task.Factory.StartNew(() =>
             {
                 while (true)
@@ -104,8 +104,7 @@ namespace WpfApp2
             //  "icon_id": 1,
             //  "value_optional": false
             //}
-
-            MessageBox.Show(json_data);
+         
         }
 
         // {
